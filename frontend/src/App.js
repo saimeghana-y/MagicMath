@@ -8,11 +8,57 @@ import {
   Paper,
   CircularProgress,
   Alert,
+  Divider,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import axios from 'axios';
 
 const queryClient = new QueryClient();
+
+// Styled components
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: '20px',
+  boxShadow: '0 8px 40px rgba(0, 0, 0, 0.12)',
+  width: '100%',
+  maxWidth: '400px',
+  background: '#ffffff',
+  minHeight: '450px',
+  display: 'flex',
+  flexDirection: 'column'
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '10px',
+    backgroundColor: '#f8f9fa',
+    '&:hover': {
+      backgroundColor: '#f0f1f2',
+    },
+    '& fieldset': {
+      borderColor: 'transparent',
+    },
+    '&:hover fieldset': {
+      borderColor: 'transparent',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '10px',
+  padding: '12px',
+  fontSize: '1rem',
+  textTransform: 'none',
+  backgroundColor: '#9c27b0',
+  '&:hover': {
+    backgroundColor: '#7b1fa2',
+  },
+}));
 
 function MagicMathCalculator() {
   const [input, setInput] = useState('');
@@ -39,77 +85,107 @@ function MagicMathCalculator() {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h3" component="h1" gutterBottom align="center">
-          Magic Math Calculator
+    <Container maxWidth="sm" sx={{ 
+      minHeight: '100vh', 
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center', 
+      justifyContent: 'center',
+      backgroundColor: '#f8f0ff',
+      py: 4,
+    }}>
+      <StyledPaper elevation={0}>
+        <Typography 
+          variant="h4" 
+          component="h1" 
+          gutterBottom 
+          align="center"
+          sx={{ 
+            color: '#9c27b0',
+            fontWeight: 500,
+            marginBottom: 4
+          }}
+        >
+          Magic Math
         </Typography>
         
-        <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Enter a number"
-              type="number"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              error={input !== '' && (isNaN(parseInt(input)) || parseInt(input) < 0)}
-              helperText={input !== '' && (isNaN(parseInt(input)) || parseInt(input) < 0) ? "Please enter a non-negative integer" : ""}
-              margin="normal"
-              required
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ mt: 2 }}
-              disabled={isLoading || input === '' || isNaN(parseInt(input)) || parseInt(input) < 0}
-            >
-              Calculate
-            </Button>
-          </form>
+        <form onSubmit={handleSubmit}>
+          <StyledTextField
+            fullWidth
+            label="Enter a number"
+            type="number"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            error={input !== '' && (isNaN(parseInt(input)) || parseInt(input) < 0)}
+            helperText={input !== '' && (isNaN(parseInt(input)) || parseInt(input) < 0) ? "Please enter a non-negative integer" : ""}
+            margin="normal"
+            required
+          />
+          
+          <StyledButton
+            type="submit"
+            variant="contained"
+            fullWidth
+            disabled={isLoading || input === '' || isNaN(parseInt(input)) || parseInt(input) < 0}
+          >
+            Calculate
+          </StyledButton>
+        </form>
 
-          {isLoading && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <CircularProgress />
-            </Box>
-          )}
-
-          {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              Error: {error.message}
-            </Alert>
-          )}
-
-          {data && (
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h5" gutterBottom>
-                Result:
+        {/* Add a container with fixed height for result/loading */}
+        <Box sx={{ 
+          height: '120px',  // Fixed height to prevent layout shifts
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mt: 3
+        }}>
+          {isLoading ? (
+            <CircularProgress sx={{ color: '#9c27b0' }} />
+          ) : data ? (
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h6" gutterBottom sx={{ color: '#666' }}>
+                Result
               </Typography>
-              <Typography variant="h4" color="primary">
+              <Typography 
+                variant="h3" 
+                sx={{ 
+                  color: '#9c27b0',
+                  fontWeight: 500
+                }}
+              >
                 {data.result}
               </Typography>
             </Box>
-          )}
-        </Paper>
+          ) : null}
+        </Box>
 
-        <Paper elevation={2} sx={{ p: 3, mt: 4 }}>
-          <Typography variant="h6" gutterBottom>
+        {error && (
+          <Alert severity="error" sx={{ mt: 3, borderRadius: '10px' }}>
+            Error: {error.message}
+          </Alert>
+        )}
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        <Divider sx={{ my: 3 }} />
+
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ color: '#9c27b0', fontSize: '1.1rem' }}>
             About Magic Math
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
             Magic Math is defined as follows:
           </Typography>
-          <Typography variant="body1" component="div" sx={{ pl: 2 }}>
-            <ul>
+          <Typography variant="body2" component="div" sx={{ pl: 2, color: '#666' }}>
+            <ul style={{ margin: 0, paddingLeft: '16px' }}>
               <li>magic_math(0) = 0</li>
               <li>magic_math(1) = 1</li>
               <li>magic_math(N) = magic_math(N−1) + magic_math(N−2) + N</li>
             </ul>
           </Typography>
-        </Paper>
-      </Box>
+        </Box>
+      </StyledPaper>
     </Container>
   );
 }
