@@ -1,9 +1,6 @@
 # Magic Math Calculator
 
-A full-stack application that calculates Magic Math numbers using a recursive formula:
-- magic_math(0) = 0
-- magic_math(1) = 1
-- magic_math(N) = magic_math(N−1) + magic_math(N−2) + N
+A full-stack application that calculates Magic Math numbers.
 
 <img width="1440" alt="image" src="https://github.com/user-attachments/assets/7e37da3f-8b06-4379-a74f-a25fe39213af" />
 
