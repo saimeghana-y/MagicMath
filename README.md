@@ -5,21 +5,81 @@ A full-stack application that calculates Magic Math numbers using a recursive fo
 - magic_math(1) = 1
 - magic_math(N) = magic_math(N−1) + magic_math(N−2) + N
 
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/9398c5c4-0787-4aa6-bd79-bcb1b51c4dfb" />
+## Implementation Details
 
+### Backend (Node.js + Express)
+- **RESTful API**: Endpoint for Magic Math calculations at `/api/magic-math/:n`
+- **Redis Caching**: Improved performance by caching calculated results
+- **Rate Limiting**: Protection against API abuse using express-rate-limit
+- **Input Validation**: Robust validation using express-validator
+- **API Documentation**: Swagger/OpenAPI documentation available at `/api-docs`
+- **Structured Logging**: Using Winston for better debugging and monitoring
+- **Unit Tests**: Comprehensive test coverage with Jest
+- **Memoization**: Efficient calculation using in-memory caching
 
-## Features
+### Frontend (React)
+- **Modern UI**: Clean, responsive design using Material-UI components
+- **Real-time Validation**: Immediate feedback on input errors
+- **Loading States**: Visual feedback during calculations
+- **Error Handling**: Clear error messages for failed requests
+- **React Query**: Efficient data fetching and cache management
+- **Responsive Design**: Works seamlessly on all screen sizes
+- **Clear Documentation**: In-app explanation of the Magic Math formula
 
-- RESTful API with Express.js
-- React frontend with modern UI
-- Memoization for efficient calculations
-- Input validation
-- Redis caching
-- Rate limiting
-- Docker support
-- Swagger documentation
-- Comprehensive test coverage
-- Structured logging
+### DevOps
+- **Docker Support**: Containerized services for consistent environments
+- **Docker Compose**: Easy deployment of all services
+- **Redis Persistence**: Volume mounting for data persistence
+- **Environment Configuration**: Flexible configuration through environment variables
+
+## Algorithm Implementation
+
+### Current Implementation (Recursive with Memoization)
+```javascript
+// Memoization cache
+const memo = new Map();
+
+function calculateMagicMath(n) {
+  // Base cases
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+
+  // Check memoization cache
+  if (memo.has(n)) {
+    return memo.get(n);
+  }
+
+  // Calculate recursively with memoization
+  const result = calculateMagicMath(n - 1) + calculateMagicMath(n - 2) + n;
+  memo.set(n, result);
+  return result;
+}
+```
+
+### Optimized Implementation (Iterative)
+```javascript
+function calculateMagicMath(n) {
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+
+  let prev2 = 0;  // f(n-2)
+  let prev1 = 1;  // f(n-1)
+  let current = 0;
+
+  for (let i = 2; i <= n; i++) {
+    current = prev1 + prev2 + i;
+    prev2 = prev1;
+    prev1 = current;
+  }
+
+  return current;
+}
+```
+
+### Algorithm Complexity
+- Time Complexity: O(n)
+- Space Complexity: O(1) for iterative, O(n) for recursive with memoization
+- Cache Complexity: Additional O(n) space for Redis caching
 
 ## Project Structure
 
@@ -27,11 +87,13 @@ A full-stack application that calculates Magic Math numbers using a recursive fo
 magic-math/
 ├── backend/           # Node.js Express backend
 │   ├── src/
-│   ├── tests/
+│   │   ├── index.js  # Main server file
+│   │   └── __tests__/# Test files
 │   └── Dockerfile
 ├── frontend/         # React frontend
 │   ├── src/
-│   ├── public/
+│   │   ├── App.js   # Main React component
+│   │   └── index.js # React entry point
 │   └── Dockerfile
 └── docker-compose.yml
 ```
@@ -93,9 +155,19 @@ To run the entire application using Docker:
 docker-compose up --build
 ```
 
+The application will be available at:
+- Frontend: http://localhost:3001
+- Backend API: http://localhost:5000
+- API Documentation: http://localhost:5000/api-docs
+
 ## API Documentation
 
 Once the server is running, visit `http://localhost:5000/api-docs` for the Swagger documentation.
+
+### Example API Call
+```bash
+curl http://localhost:5000/api/magic-math/5
+```
 
 ## Testing
 
