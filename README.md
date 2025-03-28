@@ -104,7 +104,16 @@ magic-math/
 - Redis
 - Docker (optional)
 
-## Setup Instructions
+## Setup and Instructions to Run
+
+### Docker Setup
+
+To run the entire application using Docker:
+
+```bash
+docker-compose up --build
+```
+## or
 
 ### Backend Setup
 
@@ -146,19 +155,6 @@ magic-math/
    ```bash
    npm start
    ```
-
-### Docker Setup
-
-To run the entire application using Docker:
-
-```bash
-docker-compose up --build
-```
-
-The application will be available at:
-- Frontend: http://localhost:3001
-- Backend API: http://localhost:5000
-- API Documentation: http://localhost:5000/api-docs
 
 ## API Documentation
 
