@@ -5,6 +5,9 @@ A full-stack application that calculates Magic Math numbers using a recursive fo
 - magic_math(1) = 1
 - magic_math(N) = magic_math(N−1) + magic_math(N−2) + N
 
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/9398c5c4-0787-4aa6-bd79-bcb1b51c4dfb" />
+
+
 ## Features
 
 - RESTful API with Express.js
